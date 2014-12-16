@@ -28,6 +28,10 @@ void	print(const WinSvcList& svc_lst,const std::string& output_file)
 
 	std::ofstream file;
 	file.open(output_file.c_str());
+	if(!file.is_open()){
+		std::cerr<< "不能打开文件(本程序只支持英文路径):"<<std::endl;
+		std::cerr<<output_file<<std::endl;
+	}
 	BOOST_FOREACH(const WinSvcList::value_type& val,svc_lst){
 		file<<"***********************************************************************"<<std::endl;
 		file<<"name        :"<< val.name()<<std::endl;
@@ -101,8 +105,11 @@ int main(int argc, char* argv[])
 {
 	std::string driver_list_file=std::string(argv[0])+".Driver.txt";
 	std::string win32_list_file=std::string(argv[0])+".Win32.txt";
+	std::cout<< "list all service(Driver) to file:" << driver_list_file <<std::endl;
 	list_driver(driver_list_file);
+	std::cout<< "list all service(Win32) to file:" << win32_list_file <<std::endl;
 	list_win32(win32_list_file);
+	::system("pause");
 	return 0;
 }
 
