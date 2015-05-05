@@ -65,7 +65,8 @@ public:
 private:
 
 	/// Ask the Service Control Manager (SCM) to send the requested control code to the service
-	/// @warn This func call ControlServiceEx ,so it will blocks for 30 seconds if any service is busy handling a control code
+	/// @warn This func call ControlServiceEx(or ControlService ) ,so it will blocks for 30 seconds if any service is busy handling a control code
+	/// if WINVER>=0x0600 this func invoke ControlServiceEx,ortherwise call ControlService instead,and para_ptr is not used
 	bool		post_ctrl_msg(SC_HANDLE svc_handle,SvcCtrlCode ctrl_code,void* para_ptr,std::string& what_wrong,int & stat_code);
 private:
 	SC_HANDLE	hand_;

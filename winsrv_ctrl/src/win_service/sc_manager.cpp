@@ -235,7 +235,14 @@ int		win_sc_manger::resume_service(const std::string& svc_name,std::string& what
 bool		win_sc_manger::post_ctrl_msg(SC_HANDLE svc_handle,SvcCtrlCode ctrl_code,void* para_ptr,std::string& what_wrong,int & stat_code)
 {
 	::SetLastError(sc_success_code());
-	BOOL call_ok=::ControlServiceEx(svc_handle,ctrl_code,SERVICE_CONTROL_STATUS_REASON_INFO,para_ptr);
+	BOOL call_ok=false;
+#if ((_WIN32_WINNT>=0x0600)||(WINVER>=0x0600))
+	call_ok=::ControlServiceEx(svc_handle,ctrl_code,SERVICE_CONTROL_STATUS_REASON_INFO,para_ptr);
+#else
+	SERVICE_STATUS	sstatus={0};
+	call_ok=::ControlService(svc_handle,ctrl_code,&sstatus);
+#endif
+
 	stat_code = GetLastError();
 	what_wrong=get_sys_err_msg(stat_code);
 	return static_cast<bool>(call_ok);
